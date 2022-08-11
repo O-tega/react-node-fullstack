@@ -8,7 +8,7 @@ require("./services/passport");
 
 // Load vars
 dotenv.config({	path: "../config/config.env"});
-
+//  new changes
 
 // Import auth route
 const authRoutes = require("./routes/authRoutes.routes");
