@@ -2,23 +2,18 @@
 const express = require("express");
 const dotenv = require("dotenv");
 const connectDB = require("./config/db");
-
 // initialize app
 const app = express();
-
 // Load vars
-dotenv.config({
-	path: "../config/config.env",
-});
-
-// Require the passport service
-require("./services/passport");
-
+dotenv.config({path: "../config/config.env",});
 // require userSchema
 require("./models/User");
-
+// Require the passport service
+require("./services/passport");
 // Import auth route
 const authRoutes = require("./routes/authRoutes.routes");
+
+
 
 // Initialize Database
 connectDB();

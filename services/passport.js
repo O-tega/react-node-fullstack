@@ -1,7 +1,11 @@
 const passport = require("passport");
+const mongoose = require('mongoose');
 const GoogleStrategy =
 	require("passport-google-oauth20").Strategy;
 const dotenv = require("dotenv");
+
+// call in the model schema 
+const User = mongoose.model('users')
 
 // Load vars
 dotenv.config({path: "./config/config.env"});
@@ -19,8 +23,10 @@ passport.use(
 			callbackURL:
 				"/auth/google/callback",
 		},
-		(accessToken) => {
-			console.log(accessToken);
+		(accessToken, refreshToken, profile, done) => {
+			const user = new User({googleId : profile.id, Name : profile.displayName})
+			user.save();
+			console.log(profile)
 		}
 	)
 );
