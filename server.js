@@ -8,17 +8,16 @@ const connectDB = require("./config/db");
 const app = express();
 
 
-
-
 // Load vars
 dotenv.config({path: "../config/config.env",});
-cookieKeys = process.env.cookieKeys
+
+cookieKey = process.env.COOKIE_KEY
 
 // create cookies
 app.use(
 	cookieSession({
 		maxAge: 24*60*60*1000,
-		keys: [cookieKeys]
+		keys: [`${cookieKey}`]
 	})
 );  
 

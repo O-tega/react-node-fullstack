@@ -7,14 +7,14 @@ const mongoose = require('mongoose');
 const connectDB = async()=>{
 	try{
 		const conn = await mongoose.connect(
-				process.env.mongoURI_Local,
-				{
-					// useNewUrlParser: true,
-					// useCreateIndex : true,
-					// useFindAndModify: false,
-					useUnifiedTopology: true,
-				}
-			);
+			process.env.MONGO_URI_LOCAL,
+			{
+				// useNewUrlParser: true,
+				// useCreateIndex : true,
+				// useFindAndModify: false,
+				useUnifiedTopology: true,
+			}
+		);
 		console.log(`Database connected: ${conn.connection.host}`)
 	}catch(err){
 		console.log("Error:", err);
