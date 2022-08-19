@@ -1,7 +1,6 @@
 const passport = require("passport");
 const mongoose = require("mongoose");
-const GoogleStrategy =
-	require("passport-google-oauth20").Strategy;
+const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const dotenv = require("dotenv");
 
 // call in the model schema
