@@ -8,12 +8,12 @@ const User = mongoose.model("users");
 
 // Load vars
 dotenv.config({
-	path: "./config/config.env",
+	path: "./config/config.env",       
 });
 
 googleClientID =
 	process.env.GOOGLE_CLIENT_ID;
-googleClientSecret = process.env.GOOGLE_CLIENT_SECRET_KEY
+googleClientSecret = process.env.GOOGLE_CLIENT_SECRET_KEY 
 
 // initialize a serialize function
 passport.serializeUser((user, done)=>{
