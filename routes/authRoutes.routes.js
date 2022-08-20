@@ -1,30 +1,21 @@
-const router = require("express").Router();
-const passport = require("passport");
+const { getUsers, getUser, createUser, editUser, deleteUser } = require('../controllers/userController')
 
-// create a route that user will be redirected to after google authentication
-router.get(
-	"/",
-	passport.authenticate("google", {
-		scope: ["profile", "email"],
-	})
-);
+const router = require('express').Router()
 
-// get the details from the redirect page
-router.get(
-	"/callback",
-	passport.authenticate("google")
-);
-// Implement logout
-router.get('/api/logout', (req, res)=>{
-	req.logout()
-	res.send(req.user)
-	console.log(req.user)
-})
 
-router.get('/api/current_user', (req, res)=>{
-	res.send({message:"get new response",
-	body: req.user})
-	console.log(req.user)
-})
+router.get('/', getUsers);
+
+// get specific user
+router.get('/:id', getUser);
+
+// create user
+router.post('/', createUser)
+
+// create user
+router.put('/:id', updateUser)
+
+// delete user
+router.delete('/:id', deleteUser)
+
 
 module.exports = router;
