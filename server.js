@@ -2,6 +2,7 @@ const express = require('express');
 const dotenv = require('dotenv');
 const logger = require('./middlewares/logger')
 const morgan = require('morgan')
+const colors = require('colors')
 
 // Import database
 const connectDB = require('./config/db')
@@ -58,5 +59,5 @@ PORT = process.env.PORT || 5000
 
 // Initialize server
 app.listen(PORT,()=>{
-	console.log(`server running successfully in ${process.env.NODE_ENV} mode on port ${PORT}`);
+	console.log(`server running successfully in ${process.env.NODE_ENV} mode on port ${PORT}`.yellow.bold);
 })

@@ -9,9 +9,9 @@ const connectDB = async ()=>{
             // useCreateIndex: true,
             // useFindAndModify: false
         });
-        console.log(`Database is connected successfully at: ${conn.connection.host}`)
+        console.log(`Database is connected successfully at: ${conn.connection.host}`.cyan.underline.bold)
     }catch(err){
-        console.log('Error: ', err);
+        console.log('Error: ', err.red);
         process.exit(1)
     }
          

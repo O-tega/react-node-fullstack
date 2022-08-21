@@ -8,7 +8,7 @@ exports.getUsers = (req, res, next)=>{
 				"You successfully rendered this routes",
 		});
 }
-
+  
 // @desc    Get single Users
 // @route   Get /api/v1/user/:id
 // @access  Public

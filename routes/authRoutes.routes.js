@@ -7,7 +7,7 @@ router.get('/', getUsers);
 
 // get specific user
 router.get('/:id', getUser);
-
+  
 // create user
 router.post('/', createUser)
 
