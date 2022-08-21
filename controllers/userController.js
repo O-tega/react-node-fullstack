@@ -5,7 +5,7 @@ exports.getUsers = (req, res, next)=>{
     res.status(200).json({
 			success: true,
 			message:
-				"You seccessfully rendered this routes",
+				"You successfully rendered this routes",
 		});
 }
 
