@@ -13,7 +13,7 @@ dotenv.config({
 
 googleClientID =
 	process.env.GOOGLE_CLIENT_ID;
-googleClientSecret = process.env.GOOGLE_CLIENT_SECRET_KEY 
+googleClientSecret = process.env.GOOGLE_CLIENT_SECRET_KEY  
 
 // initialize a serialize function
 passport.serializeUser((user, done)=>{
