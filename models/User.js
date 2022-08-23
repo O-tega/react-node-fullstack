@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const Schema = mongoose.Schema();
+const Schema = mongoose.Schema; 
 
 const UserSchema = new Schema({
 	name: {
@@ -16,7 +16,7 @@ const UserSchema = new Schema({
 		],
 	},
 	slug: String,
-	decscription: {
+	description: {
 		type: String,
 		required: [
 			true,
@@ -57,11 +57,11 @@ const UserSchema = new Schema({
 		type: {
 			type: String,
 			enum: ["point"],
-			required: true,
+			// required: true,
 		},
 		coordinates: {
 			type: [Number],
-			required: true,
+			// required: true,
 			index: "2dsphere",
 		},
 		formattedAddress: String,
@@ -76,7 +76,7 @@ const UserSchema = new Schema({
 		type: [String],
 		required: true,
 		enum: [
-			"web Development",
+			"Web Development",
 			"Mobile Development",
 			"UI/UX",
 			"Data Science",

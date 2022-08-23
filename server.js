@@ -30,6 +30,9 @@ connectDB();
 // Initialize app
 const app = express();
 
+// use body parser
+app.use(express.json());
+
 
 
 
