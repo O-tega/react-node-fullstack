@@ -1,5 +1,7 @@
 // Import the User model
 const User = require('../models/User')
+// import error class
+const ErrorResponse = require('../utils/errorResponse')
 
 
 // @desc    Get all Users
@@ -14,10 +16,7 @@ exports.getUsers = async (req, res, next)=>{
 				data: users
 			});
 	}catch(err){
-		res.status(400).json({
-			success: false,
-			Error: err
-		})
+		next(err)
 	}
 }
   
@@ -31,10 +30,12 @@ exports.getUser = async (req, res, next)=>{
 		);
 		// if ID is not formatted correctly
 		if (!user) {
-			return res.status(400).json({
-				success: false,
-				msg: "incorrect userID",
-			});
+			return next(
+				new ErrorResponse(
+					`Incorrect format: User not found for the ID ${req.params.id}`,
+					404
+				)
+			);
 		}
 			
 		res.status(200).json({
@@ -43,10 +44,13 @@ exports.getUser = async (req, res, next)=>{
 			});
 		
 	}catch(err){
-		res.status(400).json({
-			success: false,
-			Error: err
-		})
+		// res.status(400).json({
+		// 	success: false,
+		// 	Error: err
+		// })
+
+		// Using Error class
+		next(err)
 }
 }
 // @desc    Create single Users
@@ -61,10 +65,7 @@ exports.createUser = async (req, res, next)=>{
 			data: user
 		})
 	}catch(err){
-		res.status(400).json({
-			success: false,
-			Error : err
-		})
+		next(err)
 	}
 
 }
@@ -81,10 +82,12 @@ exports.updateUser = async (req, res, next)=>{
 
 		// check if userID exist
 		if (!user){
-			return res.status(400).json({
-				success: false,
-				msg: "userID does not exist"
-			})
+			return next(
+				new ErrorResponse(
+					`Incorrect format: User not found for the ID ${req.params.id}`,
+					404
+				)
+			);
 		}
 		res.status(200).json({
 			success : true,
@@ -92,10 +95,7 @@ exports.updateUser = async (req, res, next)=>{
 		})
 
 	}catch(err){
-		res.status(400).json({
-			success: false,
-			Error: err
-		})
+		next(err)
 	}
 }
 
@@ -106,10 +106,12 @@ exports.deleteUser = async (req, res, next)=>{
 	try{
 		const user = await User.findById(req.params.id);
 		if(!user){
-			return res.status(400).json({
-				success: false,
-				msg: "User not found"
-			})
+			return next(
+				new ErrorResponse(
+					`Incorrect format: User not found for the ID ${req.params.id}`,
+					404
+				)
+			);
 		}
 
 		await User.findByIdAndDelete(req.params.id)
@@ -119,9 +121,6 @@ exports.deleteUser = async (req, res, next)=>{
 		})
 
 	}catch(err){
-		res.status(400).json({
-			success: false,
-			Error: err
-		})
+		next(err)
 	}
 }
