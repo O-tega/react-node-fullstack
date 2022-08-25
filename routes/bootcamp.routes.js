@@ -1,4 +1,4 @@
-const { getBootcamps, getBootcamp, createBootcamp, updateBootcamp, deleteBootcamp,  } = require('../controllers/userController')
+const { getBootcamps, getBootcamp, createBootcamp, updateBootcamp, deleteBootcamp, getBootcampsInRadius,  } = require('../controllers/bootcampController')
 
 const router = require('express').Router()
 
@@ -16,6 +16,9 @@ router.put('/:id', updateBootcamp)
 
 // delete user
 router.delete('/:id', deleteBootcamp)
+
+// get bootcamps within the same radius
+router.get("/radius/:zipcode/:distance", getBootcampsInRadius);
 
 
 module.exports = router;
