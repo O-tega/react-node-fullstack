@@ -1,4 +1,11 @@
 const mongoose = require("mongoose");
+// import slugify middleware to contantenate name string
+const slugify = require('slugify');
+// Import geocoder for location formatting
+const geoCoder = require('../utils/geocoder');
+
+
+
 const Schema = mongoose.Schema; 
 
 const UserSchema = new Schema({
@@ -56,7 +63,7 @@ const UserSchema = new Schema({
 		// GeoJSON point
 		type: {
 			type: String,
-			enum: ["point"],
+			enum: ["Point"],
 			// required: true,
 		},
 		coordinates: {
@@ -121,5 +128,30 @@ const UserSchema = new Schema({
         default: Date.now
     }
 });
+
+// create User slug for name
+UserSchema.pre('save', function(next){
+	this.slug = slugify(this.name, {lower: true})
+	next()
+})
+
+// Geocode and create location field
+UserSchema.pre('save', async function(next){
+	const loc = await geoCoder.geocode(this.address)
+	this.location = {
+		type: 'Point',
+		coordinates: [loc[0].longitude, loc[0].latitude],
+		formattedAddress: loc[0].formattedAddress,
+		street: loc[0].streetName,
+		city: loc[0].city,
+		state: loc[0].stateCode,
+		zipCode: loc[0].zipcode,
+		country: loc[0].countryCode		
+	}
+	// Do not save address in the Db
+	this.address = undefined; 
+	next();
+})
+
 
 module.exports = mongoose.model('User', UserSchema)
