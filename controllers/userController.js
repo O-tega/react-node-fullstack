@@ -1,5 +1,5 @@
-// Import the User model
-const User = require('../models/User')
+// Import the Bootcamp model
+const Bootcamp = require('../models/Bootcamp')
 // import error class
 const ErrorResponse = require('../utils/errorResponse')
 // import asyncHandler and wrap all async calls with the asyncHandler
@@ -7,29 +7,29 @@ const asyncHandler = require('../middlewares/async')
 
 
 // @desc    Get all Users
-// @route   Get /api/v1/user
+// @route   Get /api/v1/bootcamp
 // @access  Public
-exports.getUsers = asyncHandler(async (req, res, next)=>{
-		const users = await User.find();
+exports.getBootcamps = asyncHandler(async (req, res, next)=>{
+		const bootcamps = await Bootcamp.find();
 		res.status(200).json({
 				success: true,
-				count: users.length,
-				data: users
+				count: bootcamps.length,
+				data: bootcamps
 			});
 })
   
 // @desc    Get single Users
-// @route   Get /api/v1/user/:id
+// @route   Get /api/v1/bootcamp/:id
 // @access  Public
-exports.getUser = asyncHandler( async (req, res, next)=>{
-		const user = await User.findById(
+exports.getBootcamp = asyncHandler( async (req, res, next)=>{
+		const bootcamp = await Bootcamp.findById(
 			req.params.id
 		);
 		// if ID is not formatted correctly
-		if (!user) {
+		if (!bootcamp) {
 			return next(
 				new ErrorResponse(
-					`Incorrect format: User not found for the ID ${req.params.id}`,
+					`Incorrect format: Bootcamp not found for the ID ${req.params.id}`,
 					404
 				)
 			);
@@ -37,62 +37,62 @@ exports.getUser = asyncHandler( async (req, res, next)=>{
 			
 		res.status(200).json({
 			success: true, 
-			data: user,
+			data: bootcamp,
 			});
 })
 // @desc    Create single Users
-// @route   POST /api/v1/user
+// @route   POST /api/v1/bootcamp
 // @access  Public
-exports.createUser = asyncHandler( async (req, res, next)=>{
-		const user = await User.create(req.body);
+exports.createBootcamp = asyncHandler( async (req, res, next)=>{
+		const bootcamp = await Bootcamp.create(req.body);
 
 		res.status(201).json({
 			success: true,
-			data: user
+			data: bootcamp
 		})
 })
 
 // @desc    Update single Users
-// @route   PUT /api/v1/user
+// @route   PUT /api/v1/bootcamp
 // @access  Private
-exports.updateUser = asyncHandler( async (req, res, next)=>{
-		const user = await User.findByIdAndUpdate(req.params.id, req.body, {
+exports.updateBootcamp = asyncHandler( async (req, res, next)=>{
+		const bootcamp = await Bootcamp.findByIdAndUpdate(req.params.id, req.body, {
 			new: true,
 			runValidators: true
 		});
 
 		// check if userID exist
-		if (!user){
+		if (!bootcamp){
 			return next(
 				new ErrorResponse(
-					`Incorrect format: User not found for the ID ${req.params.id}`,
+					`Incorrect format: Bootcamp not found for the ID ${req.params.id}`,
 					404
 				)
 			);
 		}
 		res.status(200).json({
 			success : true,
-			data: user
+			data: bootcamp
 		});
 })
 
 // @desc    Delete single Users
-// @route   DELETE /api/v1/user
+// @route   DELETE /api/v1/bootcamp
 // @access  Private
-exports.deleteUser = asyncHandler( async (req, res, next)=>{
-		const user = await User.findById(req.params.id);
-		if(!user){
+exports.deleteBootcamp = asyncHandler( async (req, res, next)=>{
+		const bootcamp = await Bootcamp.findById(req.params.id);
+		if(!bootcamp){
 			return next(
 				new ErrorResponse(
-					`Incorrect format: User not found for the ID ${req.params.id}`,
+					`Incorrect format: Bootcamp not found for the ID ${req.params.id}`,
 					404
 				)
 			);
 		}
 
-		await User.findByIdAndDelete(req.params.id)
+		await Bootcamp.findByIdAndDelete(req.params.id)
 		res.status(200).json({
 			success: true,
-			msg: "User is deleted"
+			msg: "Bootcamp is deleted"
 		});
 })

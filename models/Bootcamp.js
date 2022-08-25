@@ -8,7 +8,7 @@ const geoCoder = require('../utils/geocoder');
 
 const Schema = mongoose.Schema; 
 
-const UserSchema = new Schema({
+const BootcampSchema = new Schema({
 	name: {
 		type: String,
 		required: [
@@ -130,13 +130,13 @@ const UserSchema = new Schema({
 });
 
 // create User slug for name
-UserSchema.pre('save', function(next){
+BootcampSchema.pre('save', function(next){
 	this.slug = slugify(this.name, {lower: true})
 	next()
 })
 
 // Geocode and create location field
-UserSchema.pre('save', async function(next){
+BootcampSchema.pre('save', async function(next){
 	const loc = await geoCoder.geocode(this.address)
 	this.location = {
 		type: 'Point',
@@ -154,4 +154,4 @@ UserSchema.pre('save', async function(next){
 })
 
 
-module.exports = mongoose.model('User', UserSchema)
+module.exports = mongoose.model('Bootcamp', BootcampSchema)
