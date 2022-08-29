@@ -13,6 +13,7 @@ dotenv.config({path: "./config/config.env"})
 
 // Import routes
 const bootcampRoutes = require('./routes/bootcamp.routes');
+const courseRoutes = require('./routes/courseRoutes.routes')
 
 
 
@@ -46,6 +47,7 @@ if(process.env.NODE_ENV==='development'){
 
 // initialize routes
 app.use('/api/v1/bootcamp', bootcampRoutes);
+app.use('/api/v1/course', courseRoutes);
 
 // initialize errorhandler middleware
 app.use(errorHandler)
