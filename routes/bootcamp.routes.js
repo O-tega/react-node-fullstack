@@ -1,4 +1,4 @@
-const { getBootcamps, getBootcamp, createBootcamp, updateBootcamp, deleteBootcamp, getBootcampsInRadius,  } = require('../controllers/bootcampController')
+const { getBootcamps, getBootcamp, createBootcamp, updateBootcamp, deleteBootcamp, getBootcampsInRadius, bootcampPhotoUpload,  } = require('../controllers/bootcampController')
 
 // Include other resource routes
 const courseRouter = require('./courseRoutes.routes');
@@ -19,6 +19,9 @@ router.post('/', createBootcamp)
 
 // create user
 router.put('/:id', updateBootcamp)
+
+// Upload photo
+router.put('/:id/photo', bootcampPhotoUpload);
 
 // delete user
 router.delete('/:id', deleteBootcamp)
