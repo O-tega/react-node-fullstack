@@ -3,13 +3,16 @@ const { getBootcamps, getBootcamp, createBootcamp, updateBootcamp, deleteBootcam
 // Include other resource routes
 const courseRouter = require('./courseRoutes.routes');
 
+const advancedResult = require('../middlewares/advancedResult');
+const Bootcamp = require('../models/Bootcamp');
+
 const router = require('express').Router()
 
 // Re-route to course
 router.use('/:bootcampId/courses', courseRouter)
 
 
-router.get('/', getBootcamps);
+router.get('/', advancedResult(Bootcamp, 'courses'), getBootcamps);
 
 // get specific user
 router.get('/:id', getBootcamp);
