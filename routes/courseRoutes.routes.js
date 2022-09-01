@@ -7,7 +7,7 @@ const {
 } = require("../controllers/courseController");
 
 const router =
-	require("express").Router();
+	require("express").Router({mergeParams: true});
 
 // get all courses, post course
 router

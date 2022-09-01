@@ -35,7 +35,10 @@ exports.getBootcamps = asyncHandler(async (req, res, next)=>{
 	queryStr = queryStr.replace(/\b(gt|gte|lt|lte|in)\b/g, match =>`$${match}`);
 
 	// Finding resourse
-	query = Bootcamp.find(JSON.parse(queryStr))
+	query = Bootcamp.find(JSON.parse(queryStr)).populate({
+		path: 'courses',
+		select: 'title description'
+	})
 
 	// Select fields
 	if(req.query.select){
@@ -163,8 +166,9 @@ exports.deleteBootcamp = asyncHandler( async (req, res, next)=>{
 				)
 			);
 		}
+		// triggered by the cascading delete middleware in bootcamp model
+		bootcamp.remove()
 
-		await Bootcamp.findByIdAndDelete(req.params.id)
 		res.status(200).json({
 			success: true,
 			msg: "Bootcamp is deleted"
