@@ -15,7 +15,8 @@ dotenv.config({path: "./config/config.env"})
 
 // Import routes
 const bootcampRoutes = require('./routes/bootcamp.routes');
-const courseRoutes = require('./routes/courseRoutes.routes')
+const courseRoutes = require('./routes/courseRoutes.routes');
+const authRoutes = require('./routes/authroutes.routes');
 
 
 
@@ -56,6 +57,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 // initialize routes
 app.use('/api/v1/bootcamp', bootcampRoutes);
 app.use('/api/v1/course', courseRoutes);
+app.use('/api/v1/auth', authRoutes )
 
 // initialize errorhandler middleware
 app.use(errorHandler)

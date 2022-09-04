@@ -15,7 +15,7 @@ const { query } = require('express')
 // @access  Public
 exports.getBootcamps = asyncHandler(async (req, res, next)=>{
 
-		// calling the advancedResult middleware
+		// calling the advancedResult middleware 
 		res.status(200).json(res.advancedResult)
 })
   
