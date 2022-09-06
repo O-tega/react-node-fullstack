@@ -1,5 +1,6 @@
-// Import the Bootcamp model
+// Import the models
 const Bootcamp = require('../models/Bootcamp')
+const User = require('../models/User')
 // import error class
 const ErrorResponse = require('../utils/errorResponse')
 // import asyncHandler and wrap all async calls with the asyncHandler
@@ -7,7 +8,8 @@ const asyncHandler = require('../middlewares/async')
 // import geocoder
 const geocoder = require('../utils/geocoder')
 path = require('path')
-const { query } = require('express')
+
+
 
 
 // @desc    Get all Users
@@ -45,7 +47,21 @@ exports.getBootcamp = asyncHandler( async (req, res, next)=>{
 // @route   POST /api/v1/bootcamp
 // @access  Public
 exports.createBootcamp = asyncHandler( async (req, res, next)=>{
-		const bootcamp = await Bootcamp.create(req.body);
+	// Add user to the object file
+	req.body.user = req.user.id
+
+	//  CHeck for pu/blished bootcamp
+	const publishedBootcamp = await Bootcamp.findOne({user: req.user.id})
+
+	// if the user is not an admin, they can only add one bootcamp
+	if(publishedBootcamp && req.user.role !== 'admin'){
+		return next(
+			new ErrorResponse(`${req.user.id} already has a published bootcamp`, 400)
+		)
+	}
+
+
+		bootcamp = await Bootcamp.create(req.body);
 
 		res.status(201).json({
 			success: true,
@@ -57,10 +73,7 @@ exports.createBootcamp = asyncHandler( async (req, res, next)=>{
 // @route   PUT /api/v1/bootcamp
 // @access  Private
 exports.updateBootcamp = asyncHandler( async (req, res, next)=>{
-		const bootcamp = await Bootcamp.findByIdAndUpdate(req.params.id, req.body, {
-			new: true,
-			runValidators: true
-		});
+		let bootcamp = await Bootcamp.findById(req.params.id)
 
 		// check if userID exist
 		if (!bootcamp){
@@ -71,6 +84,20 @@ exports.updateBootcamp = asyncHandler( async (req, res, next)=>{
 				)
 			);
 		}
+
+		// Check bootcamp owner by user id
+		if(bootcamp.user.toString() !== req.user.id && req.user.role !=='admin'){
+			return next(
+				new ErrorResponse(`User: ${req.user.id} is unauthorised`, 401)
+			)
+		}
+
+		// update bootcamp
+		bootcamp = await Bootcamp.findByIdAndUpdate(req.params.id, req.body, {
+			new: true,
+			runValidators:true
+		})
+
 		res.status(200).json({
 			success : true,
 			data: bootcamp
@@ -90,11 +117,16 @@ exports.deleteBootcamp = asyncHandler( async (req, res, next)=>{
 				)
 			);
 		}
+		if(bootcamp.user.toString() !== req.user.id && req.user.role !== 'admin'){
+			return next(
+				new ErrorResponse(`User: ${req.user.id} is not authorized`, 401)
+			)
+		}
 		// triggered by the cascading delete middleware in bootcamp model
 		bootcamp.remove()
 
 		res.status(200).json({
-			success: true,
+			success: true, 
 			msg: "Bootcamp is deleted"
 		});
 })
@@ -147,6 +179,14 @@ exports. bootcampPhotoUpload = asyncHandler( async (req, res, next)=>{
 				)
 			);
 		}
+
+		if(bootcamp.user.toString() !== req.user.id && req.user.role !=='admin'){
+			return next(
+				new ErrorResponse(`User ${req.user.id} is not authorized`)
+			)
+		}
+
+
 		if(!req.files){
 			return next(
 				new ErrorResponse(

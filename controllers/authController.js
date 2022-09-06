@@ -21,16 +21,8 @@ exports.register = asyncHandler( async (req, res, next)=>{
         role
     });
 
-    const token = jwt.sign({id: user._id}, process.env.JWT_SECRET, {
-        expiresIn: process.env.JWT_EXPIRE
-    })
-
-    // const token = user.getSignedJwtToken() ..... try to implement jwt from the model
-
-    res.status(200).json({
-        success:true,
-        token
-    })
+   // store cookie in the broswer instead of sending the token 
+    sendTokenResponse(user, 200, res)
 
 })
 
@@ -75,13 +67,32 @@ if(!isMatch){
         )
     }
 
- const token = jwt.sign({id: user._id}, process.env.JWT_SECRET, {
+    // store cookie in the broswer instead of sending the token 
+    sendTokenResponse(user, 200, res)
+
+})
+
+// get token from model, create cookie and send response
+const sendTokenResponse = (user, statusCode, res)=>{
+
+    const token = jwt.sign({id: user._id}, process.env.JWT_SECRET, {
         expiresIn: process.env.JWT_EXPIRE
     })
 
-    res.status(200).json({
-        success:true,
-        token
-    })
+    const options ={
+        expires: new Date(Date.now() + process.env.COOKIE_EXPIRE * 24 * 60 * 60 * 1000),
+        httpOnly: true
+    }
+    if(process.env.NODE_ENV==='production'){
+        options.secure = true
+    }
 
-})
+    res
+        .status(statusCode)
+        .cookie('token', token, options)
+        .json({
+            success: true,
+            token,
+        })
+
+}

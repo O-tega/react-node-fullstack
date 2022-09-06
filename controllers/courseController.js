@@ -9,6 +9,9 @@ const ErrorResponse = require('../utils/errorResponse');
 // @Route   POST route /api/bootcamp/:bootcampId/courses
 // @access  Private
 exports.createCourse = asyncHandler(async(req, res, next)=>{
+    //  Add user to course data object
+    req.body.user = req.user.id
+
     req.body.bootcamp = req.params.bootcampId
 
     const bootcamp = await Bootcamp.findById(req.params.bootcampId);
@@ -18,6 +21,14 @@ exports.createCourse = asyncHandler(async(req, res, next)=>{
             new ErrorResponse(`No bootcamp with the id ${req.params.bootcampId}`, 404)
         )
     }
+
+    	// Check bootcamp owner by user id
+		if(bootcamp.user.toString() !== req.user.id && req.user.role !=='admin'){
+			return next(
+				new ErrorResponse(`User: ${req.user.id} is unauthorised`, 401)
+			)
+		}
+
     const course = await Course.create(req.body)
     
 
@@ -74,10 +85,7 @@ exports.getCourse = asyncHandler(async(req, res, next)=>{
 // @Route   PUT route /api/course/:id
 // @access  Private
 exports.updateCourse = asyncHandler(async(req, res, next)=>{
-    const course = await Course.findByIdAndUpdate(req.params.id, req.body, {
-        new: true,
-        runValidators: true
-    })
+    let course = await Course.findById(req.params.id)
     if (!course) {
 			return next(
 				new ErrorResponse(
@@ -85,6 +93,19 @@ exports.updateCourse = asyncHandler(async(req, res, next)=>{
 				)
 			);
 		}
+
+        	// Check bootcamp owner by user id
+		if(course.user.toString() !== req.user.id && req.user.role !=='admin'){
+			return next(
+				new ErrorResponse(`User: ${req.user.id} is unauthorised`, 401)
+			)
+		}
+
+        // update course
+        course = await Course.findByIdAndUpdate(req.params.id, req.body, {
+            new: true,
+            runValidatorslidators: true
+        })
     res.status(200).json({
         success: true,
         data: course
@@ -104,6 +125,12 @@ exports.deleteCourse = asyncHandler(async(req, res, next)=>{
             )
         )
     }
+     	// Check bootcamp owner by user id
+		if(course.user.toString() !== req.user.id && req.user.role !=='admin'){
+			return next(
+				new ErrorResponse(`User: ${req.user.id} is unauthorised`, 401)
+			)
+		}
 
     await course.remove()
      const courses = await Course.find()
