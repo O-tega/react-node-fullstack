@@ -98,6 +98,7 @@ exports.updateBootcamp = asyncHandler( async (req, res, next)=>{
 			runValidators:true
 		})
 
+
 		res.status(200).json({
 			success : true,
 			data: bootcamp

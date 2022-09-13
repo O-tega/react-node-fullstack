@@ -2,11 +2,12 @@ const ErrorResponse = require('../utils/errorResponse');
 const asyncHandler = require('../middlewares/async');
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcryptjs')
+const crypto = require('crypto')
 const User = require('../models/User');
 
 
 
-// @Descr   Regiater user
+// @Descr   Register user
 // @Route   POST route /api/v1/auth/register
 // @access  Public
 
@@ -72,6 +73,54 @@ if(!isMatch){
 
 })
 
+// @desc    Get current user
+// @route   Get /api/v1/me
+// @access  Private
+exports.getMe =asyncHandler (async(req, res, next)=>{
+    const user = await User.findById(req.user.id)
+
+    res.status(200).json({
+        success: true,
+        data: user
+    })
+})
+
+// @desc    Forgot pasword
+// @route   POST /api/v1/auth/forgotpassword
+// @access  Public
+exports.forgotPassword = asyncHandler (async(req, res, next)=>{
+    let user = await User.findOne({email: req.body.email})
+
+    if(!user){
+        return next(
+            new ErrorResponse(`${req.body.email} does not exist`, 404)
+        )
+    }
+    
+    // const resetToken = (user)=>{
+    //     // generate token
+    //         const resetToken = crypto.randomBytes(20).toString('hex')
+    //         console.log(resetToken)
+    
+    //         // hash token and send to the resetPasswordToken field
+    //       user.resetPasswordToken = crypto
+    //                     .createHash("sha256")
+    //                     .update(resetToken)
+    //                     .digest("hex");
+        
+    
+    //         user.resetPasswordExpire = new  Date(Date.now() + 10 * 60 * 1000)    
+    // } 
+    // resetToken(user)
+
+    // await user.save({validateBeforeSave: false})  
+
+    res.status(200).json({
+        success: true,
+        data: user    
+    })
+})
+
 // get token from model, create cookie and send response
 const sendTokenResponse = (user, statusCode, res)=>{
 
@@ -80,7 +129,7 @@ const sendTokenResponse = (user, statusCode, res)=>{
     })
 
     const options ={
-        expires: new Date(Date.now() + process.env.COOKIE_EXPIRE * 24 * 60 * 60 * 1000),
+        expires: Date.parse(Date.now() + process.env.COOKIE_EXPIRE * 24 * 60 * 60 * 1000),
         httpOnly: true
     }
     if(process.env.NODE_ENV==='production'){
@@ -96,3 +145,20 @@ const sendTokenResponse = (user, statusCode, res)=>{
         })
 
 }
+
+// Generate Hash password and token
+//   const getPasswordToken =(user)=> {
+        
+//         // generate token
+//         const resetToken = crypto.randomBytes(20).toString('hex')
+        
+//         // hash token and send to the resetPasswordToken field
+//         let {resetPasswordExpire, resetPasswordToken} = user
+
+//         resetPasswordToken = crypto.createHash('sha256').update(resetToken).digest('hex')
+
+//         // set Expire
+//         resetPasswordExpire = new Date.now() + 10 * 60 * 1000
+//         return resetToken
+
+//     }
